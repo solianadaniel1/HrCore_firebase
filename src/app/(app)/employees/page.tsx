@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -19,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
@@ -35,6 +37,7 @@ const employees = [
     position: "Senior Software Engineer",
     department: "IT",
     status: "Active",
+    avatar: "https://placehold.co/100x100.png",
   },
   {
     id: "NIB-00124",
@@ -42,6 +45,7 @@ const employees = [
     position: "Project Manager",
     department: "IT",
     status: "Active",
+    avatar: "https://placehold.co/100x100.png",
   },
   {
     id: "NIB-00125",
@@ -49,6 +53,7 @@ const employees = [
     position: "UX Designer",
     department: "Design",
     status: "On Leave",
+    avatar: "https://placehold.co/100x100.png",
   },
   {
     id: "NIB-00126",
@@ -56,6 +61,7 @@ const employees = [
     position: "Accountant",
     department: "Finance",
     status: "Active",
+    avatar: "https://placehold.co/100x100.png",
   },
 ];
 
@@ -100,7 +106,15 @@ export default function EmployeesPage() {
               {employees.map((employee) => (
                 <TableRow key={employee.id}>
                   <TableCell className="font-medium">{employee.id}</TableCell>
-                  <TableCell>{employee.name}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={employee.avatar} alt={employee.name} data-ai-hint="person" />
+                        <AvatarFallback>{employee.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="font-medium">{employee.name}</div>
+                    </div>
+                  </TableCell>
                   <TableCell>{employee.position}</TableCell>
                   <TableCell>{employee.department}</TableCell>
                   <TableCell>
