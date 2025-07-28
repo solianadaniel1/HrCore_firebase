@@ -9,7 +9,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,19 +110,6 @@ export default function AddTransferPage() {
               <Textarea id="remark" placeholder="Enter any remarks here..." />
             </div>
           </CardContent>
-        </Card>
-        
-        <Card>
-           <CardHeader>
-            <CardTitle>Approval Information</CardTitle>
-            <CardDescription>This information is typically updated during the approval process.</CardDescription>
-          </CardHeader>
-           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Input id="status" defaultValue="Pending" disabled />
-            </div>
-           </CardContent>
         </Card>
       </div>
 
