@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id                    String      @id @default(cuid())
+  employeeId            String      @unique
+  title                 String?
+  firstName             String
+  lastName              String
+  placeOfBirth          String?
+  countryOfBirth        String?
+  nationality           String?
+  privateEmail          String?     @unique
+  nibEmail              String      @unique
+  country               String?
+  region                String?
+  city                  String?
+  subCity               String?
+  woreda                String?
+  kebele                String?
+  houseNumber           String?
+  workUnit              String?
+  parentWorkUnit        String?
+  workLocation          String?
+  jobCategory           String?
+  jobGrade              String?
+  salaryStep            String?
+  salary                Float?
+  managerId             String?
+  isUnderProbation      Boolean     @default(false)
+  isTrainee             Boolean     @default(false)
+  motherName            String?
+  maritalStatus         String?
+  dependentChildren     Int         @default(0)
+  nationalId            String?     @unique
+  kebeleId              String?     @unique
+  drivingLicence        String?     @unique
+  passportNo            String?     @unique
+  privatePensionId      String?     @unique
+  tinNumber             String?     @unique
+  idDocumentUrl         String?
+  guaranteeName         String?
+  guaranteeMobile       String?
+  guaranteeDocumentUrl  String?
+  emergencyContactName  String?
+  emergencyContactMobile1 String?
+  emergencyContactMobile2 String?
+  avatarUrl             String?
+  status                String      @default("Active") // e.g., Active, On Leave
+  hireDate              DateTime    @default(now())
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  manager               Employee?   @relation("ManagerEmployee", fields: [managerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reports               Employee[]  @relation("ManagerEmployee")
+  promotions            Promotion[]
+  demotions             Demotion[]
+  laterals              Lateral[]
+  transfers             Transfer[]
+  actingAssignments     Acting[]
+  leaveRequests         Leave[]
+}
+
+model Promotion {
+  id                    String   @id @default(cuid())
+  employeeId            String
+  employmentTerm        String?
+  prevWorkUnit          String?
+  prevWorkLocation      String?
+  prevPosition          String?
+  prevJobCategory       String?
+  prevJobGrade          String?
+  prevSalary            Float?
+  newWorkUnit           String?
+  newWorkLocation       String?
+  newPosition           String?
+  newJobCategory        String?
+  newJobGrade           String?
+  salaryStep            String?
+  newSalary             Float?
+  attachmentUrl         String?
+  attachmentReversalUrl String?
+  promotionType         String? // e.g., Standard, Merit-based, Reclassification
+  effectiveDate         DateTime
+  promotionDate         DateTime
+  remark                String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
+
+model Demotion {
+  id                    String   @id @default(cuid())
+  employeeId            String
+  prevWorkUnit          String?
+  prevWorkLocation      String?
+  prevPosition          String?
+  prevJobCategory       String?
+  prevJobGrade          String?
+  prevSalary            Float?
+  newWorkUnit           String?
+  newWorkLocation       String?
+  newPosition           String?
+  newJobCategory        String?
+  newJobGrade           String?
+  salaryStep            String?
+  newSalary             Float?
+  attachmentUrl         String?
+  attachmentReversalUrl String?
+  salaryChanged         Boolean  @default(false)
+  demotionDate          DateTime
+  remark                String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
+
+model Lateral {
+  id                   String   @id @default(cuid())
+  employeeId           String
+  currentWorkUnit      String?
+  currentWorkLocation  String?
+  currentPosition      String?
+  currentJobCategory   String?
+  currentJobGrade      String?
+  newWorkUnit          String?
+  newWorkLocation      String?
+  newPosition          String?
+  newJobCategory       String?
+  newJobGrade          String?
+  attachmentUrl        String?
+  assignmentDate       DateTime
+  remark               String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
+
+model Transfer {
+  id              String   @id @default(cuid())
+  employeeId      String
+  transferType    String? // e.g., Internal, Inter-departmental, Branch Transfer
+  prevWorkUnit    String?
+  newWorkUnit     String?
+  transferDate    DateTime
+  attachmentUrl   String?
+  remark          String?
+  status          String   @default("Pending") // e.g., Pending, Approved, Rejected
+  approvedDate    DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
+
+model Acting {
+  id                  String   @id @default(cuid())
+  employeeId          String
+  currentWorkUnit     String?
+  currentWorkLocation String?
+  currentPosition     String?
+  currentJobCategory  String?
+  currentJobGrade     String?
+  currentSalary       Float?
+  newWorkUnit         String?
+  newWorkLocation     String?
+  newPosition         String?
+  newJobCategory      String?
+  newJobGrade         String?
+  newSalary           Float?
+  actingAllowance     Float?
+  actingType          String? // e.g., Temporary Coverage, Project-based, Higher Duties
+  attachmentUrl       String?
+  assignmentDate      DateTime
+  remark              String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
+
+model Leave {
+  id        String   @id @default(cuid())
+  employeeId String
+  leaveType String   // e.g., Annual, Sick, Maternity, Unpaid
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  status    String   @default("Pending") // e.g., Pending, Approved, Rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [employeeId])
+}
